@@ -1,18 +1,25 @@
 import models.users.Datum;
 import models.users.RegisterUserInfo;
+import models.users.UpdateUserInfo;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.screenplay.Actor;
+import net.serenitybdd.screenplay.ensure.Ensure;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
+import net.serenitybdd.screenplay.rest.questions.LastResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import questions.GetUsersQuestion;
 import questions.ResponseCode;
 import tasks.GetUsers;
 import tasks.RegisterUser;
+import tasks.UpdateUser;
 
+import static net.serenitybdd.rest.SerenityRest.restAssuredThat;
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.isEmptyString;
 
 @RunWith(SerenityRunner.class)
 public class SerenityBddTests {
@@ -89,5 +96,28 @@ public class SerenityBddTests {
         julian.should(
                 seeThat("El codigo de respuesta", ResponseCode.was(), equalTo(200))
         );
+    }
+
+    @Test
+    public void UpdateUserTest(){
+
+        Actor julian = Actor.named("Julian the trainer")
+                .whoCan(CallAnApi.at(restApIUrl));
+
+        UpdateUserInfo updateUserInfo = new UpdateUserInfo();
+
+        updateUserInfo.setName("morpheus");
+        updateUserInfo.setJob("leader");
+
+        julian.attemptsTo(
+                UpdateUser.withInfo(updateUserInfo)
+        );
+
+        julian.should(
+                seeThat("El codigo de respuesta", ResponseCode.was(), equalTo(200))
+        );
+        
+        restAssuredThat(lastResponse -> lastResponse.body(containsString("updatedAt")));
+
     }
 }
