@@ -94,7 +94,7 @@ public class SerenityBddTests {
         );
 
         julian.should(
-                seeThat("El codigo de respuesta", ResponseCode.was(), equalTo(200))
+                seeThat("El codigo de respuesta", new ResponseCode(), equalTo(200))
         );
     }
 
@@ -116,7 +116,7 @@ public class SerenityBddTests {
         julian.should(
                 seeThat("El codigo de respuesta", ResponseCode.was(), equalTo(200))
         );
-        
+
         restAssuredThat(lastResponse -> lastResponse.body(containsString("updatedAt")));
 
     }
