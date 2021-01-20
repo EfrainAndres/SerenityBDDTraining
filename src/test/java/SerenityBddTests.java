@@ -1,3 +1,4 @@
+import facts.NetflixPlans;
 import models.users.Datum;
 import models.users.RegisterUserInfo;
 import models.users.UpdateUserInfo;
@@ -120,4 +121,14 @@ public class SerenityBddTests {
         restAssuredThat(lastResponse -> lastResponse.body(containsString("updatedAt")));
 
     }
+
+    @Test
+    public void factTest(){
+
+        Actor julian = Actor.named("Julian the trainer")
+                .whoCan(CallAnApi.at(restApIUrl));
+
+        julian.has(NetflixPlans.toViewsSeries());
+    }
+
 }
