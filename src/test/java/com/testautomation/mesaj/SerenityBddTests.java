@@ -2,6 +2,7 @@ package com.testautomation.mesaj;
 
 import com.testautomation.mesaj.facts.NetflixPlans;
 import com.testautomation.mesaj.models.users.Datum;
+import com.testautomation.mesaj.models.users.Foo;
 import com.testautomation.mesaj.models.users.RegisterUserInfo;
 import com.testautomation.mesaj.models.users.UpdateUserInfo;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -25,6 +26,19 @@ import static org.hamcrest.Matchers.contains;
 public class SerenityBddTests {
 
     private static final String restApIUrl = "http://localhost:5000/api";
+
+    @Test
+    public void initiala(){
+        Foo foo = new Foo();
+        foo.setName("algo");
+        foo.setAge(10);
+        foo.setLastName("algomas");
+
+        Foo foo1 = new Foo();
+        foo1.setName("algo");
+        foo1.setAge(10);
+        System.out.println(foo.equals(foo1));
+    }
 
     @Test
     public void initialTest(){
