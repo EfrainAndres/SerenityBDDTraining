@@ -1,8 +1,0 @@
-"Story","Title","Result","Date","Stability","Duration (s)"
-"Serenity initial tests","Get users","SUCCESS","2021-01-17T22:12:04.1352304-05:00[America/Bogota]","0.0","4.25"
-"Serenity initial tests","Initial test","SUCCESS","2021-01-17T22:33:14.5908459-05:00[America/Bogota]","0.0","3.72"
-"Serenity bdd tests","Initial test","SUCCESS","2021-01-17T23:37:11.3869091-05:00[America/Bogota]","0.0","3.88"
-"Serenity bdd tests","Register user test","SUCCESS","2021-01-18T11:12:18.2191153-05:00[America/Bogota]","0.0","5.5"
-"Serenity bdd tests","Update user test","SUCCESS","2021-01-18T16:09:42.6067756-05:00[America/Bogota]","0.0","3.7"
-"Serenity bdd tests","Register user test2","SUCCESS","2021-01-20T12:27:33.1972069-05:00[America/Bogota]","0.0","5.88"
-"Serenity bdd tests","Fact test","SUCCESS","2021-01-20T12:45:39.8083805-05:00[America/Bogota]","0.0","5.69"

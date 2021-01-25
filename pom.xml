@@ -13,6 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <serenity.version>2.3.4</serenity.version>
         <serenity.maven.version>2.3.4</serenity.maven.version>
+        <serenity.cucumber.version>1.9.19</serenity.cucumber.version>
         <encoding>UTF-8</encoding>
 
         <tags></tags>
@@ -102,8 +103,9 @@
 
         <dependency>
             <groupId>net.serenity-bdd</groupId>
-            <artifactId>serenity-cucumber6</artifactId>
-            <version>${serenity.version}</version>
+            <artifactId>serenity-cucumber</artifactId>
+            <version>${serenity.cucumber.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
