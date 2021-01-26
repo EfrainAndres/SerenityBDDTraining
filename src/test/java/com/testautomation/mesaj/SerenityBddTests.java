@@ -88,15 +88,27 @@ public class SerenityBddTests {
         Actor julian = Actor.named("Julian the trainer")
                 .whoCan(CallAnApi.at(restApIUrl));
 
-        String registerUserInfo = "{\n" +
+        /*String registerUserInfo = "{\n" +
                 "    \"name\": \"morpheus\",\n" +
                 "    \"job\": \"leader\",\n" +
                 "    \"email\": \"eve.holt@reqres.in\",\n" +
                 "    \"password\": \"pistol\"\n" +
                 "}";
 
+        RegisterUserInfo registerUserInfo = new RegisterUserInfo
+                .builder().email("").build();
+
+
         julian.attemptsTo(
                 RegisterUser.withInfo(registerUserInfo)
+        );*/
+
+        julian.attemptsTo(
+                RegisterUser
+                        .withName("morpheus")
+                        .andEmail("eve.holt@reqres.in")
+                        .andPassword("pistol")
+                        .andJob("leader")
         );
 
         julian.should(
@@ -104,6 +116,7 @@ public class SerenityBddTests {
         );
     }
 
+    /*
     @Test
     public void registerUserTest2(){
 
@@ -125,6 +138,7 @@ public class SerenityBddTests {
                 seeThat("El codigo de respuesta", new ResponseCode(), equalTo(200))
         );
     }
+     */
 
     @Test
     public void UpdateUserTest(){

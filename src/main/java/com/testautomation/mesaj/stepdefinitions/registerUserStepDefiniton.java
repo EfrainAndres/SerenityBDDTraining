@@ -23,7 +23,7 @@ public class registerUserStepDefiniton {
 
     @When("el envia la informacion requerida para el registro")
     public void elEnviaLaInformacionRequeridaParaElRegistro() {
-        String registerUserInfo = "{\n" +
+        /*String registerUserInfo = "{\n" +
                 "    \"name\": \"morpheus\",\n" +
                 "    \"job\": \"leader\",\n" +
                 "    \"email\": \"eve.holt@reqres.in\",\n" +
@@ -32,7 +32,7 @@ public class registerUserStepDefiniton {
 
         efrain.attemptsTo(
                 RegisterUser.withInfo(registerUserInfo)
-        );
+        );*/
     }
 
     @Then("el debe obtener una cuenta virtual para poder ingresar cuando lo requiera")
