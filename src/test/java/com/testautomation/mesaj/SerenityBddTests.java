@@ -1,5 +1,6 @@
 package com.testautomation.mesaj;
 
+import com.testautomation.mesaj.builders.FooBuilder;
 import com.testautomation.mesaj.facts.NetflixPlans;
 import com.testautomation.mesaj.models.users.Datum;
 import com.testautomation.mesaj.models.users.Foo;
@@ -29,7 +30,7 @@ public class SerenityBddTests {
 
     @Test
     public void initiala(){
-        Foo foo = new Foo();
+        /*Foo foo = new Foo();
         foo.setName("algo");
         foo.setAge(10);
         foo.setLastName("algomas");
@@ -37,7 +38,20 @@ public class SerenityBddTests {
         Foo foo1 = new Foo();
         foo1.setName("algo");
         foo1.setAge(10);
-        System.out.println(foo.equals(foo1));
+        System.out.println(foo.equals(foo1));*/
+
+        Foo foo2 = FooBuilder
+                .withName("pepito")
+                .build();
+
+        Foo foo3 = FooBuilder
+                .withName("pepito")
+                .andAge(10)
+                .andLastName("feo")
+                .build();
+
+        System.out.println(foo2.toString());
+        System.out.println(foo3.toString());
     }
 
     @Test
