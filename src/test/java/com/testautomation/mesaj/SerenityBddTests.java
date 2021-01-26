@@ -1,6 +1,10 @@
 package com.testautomation.mesaj;
 
+import com.testautomation.mesaj.abilities.InteractWithDb;
 import com.testautomation.mesaj.builders.FooBuilder;
+import com.testautomation.mesaj.database.DatabaseConnectionInfo;
+import com.testautomation.mesaj.database.DatabaseType;
+import com.testautomation.mesaj.database.entity.Example;
 import com.testautomation.mesaj.facts.NetflixPlans;
 import com.testautomation.mesaj.models.users.Datum;
 import com.testautomation.mesaj.models.users.Foo;
@@ -16,6 +20,15 @@ import com.testautomation.mesaj.questions.ResponseCode;
 import com.testautomation.mesaj.tasks.GetUsers;
 import com.testautomation.mesaj.tasks.RegisterUser;
 import com.testautomation.mesaj.tasks.UpdateUser;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static net.serenitybdd.rest.SerenityRest.restAssuredThat;
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
@@ -170,6 +183,108 @@ public class SerenityBddTests {
                 .whoCan(CallAnApi.at(restApIUrl));
 
         julian.has(NetflixPlans.toViewsSeries());
+    }
+
+    @Test
+    public void dataBaseConnectionTest() {
+
+        DatabaseConnectionInfo connectionInfo = DatabaseConnectionInfo
+                .builder()
+                .username("root")
+                .databaseType(DatabaseType.MYSQL)
+                .url("jdbc:mysql://localhost/test_automation")
+                .password("my-secret-pw")
+                .entityNames(Stream.of(
+                        Example.class)
+                        .map(Class::getName)
+                        .collect(Collectors.toList()))
+                .build();
+
+
+        Actor julian = Actor.named("julian");
+        julian.can(InteractWithDb.using(connectionInfo));
+
+        EntityManager entityManager = InteractWithDb.as(julian).getManager();
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Example> criteriaQuery = criteriaBuilder
+                .createQuery(Example.class);
+
+        Root<Example> userRoot = criteriaQuery.from(Example.class);
+
+        Example queryResult = entityManager
+                .createQuery(criteriaQuery
+                        .select(userRoot))
+                .getSingleResult();
+
+        System.out.println(queryResult);
+    }
+
+    @Test
+    public void dataBaseConnectionTestDeleteAll() {
+
+        DatabaseConnectionInfo connectionInfo = DatabaseConnectionInfo
+                .builder()
+                .username("root")
+                .databaseType(DatabaseType.MYSQL)
+                .url("jdbc:mysql://localhost/test_automation")
+                .password("my-secret-pw")
+                .entityNames(Stream.of(
+                        Example.class)
+                        .map(Class::getName)
+                        .collect(Collectors.toList()))
+                .build();
+
+
+        Actor julian = Actor.named("julian");
+        julian.can(InteractWithDb.using(connectionInfo));
+
+        EntityManager entityManager = InteractWithDb.as(julian).getManager();
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaDelete<Example> criteriaDelete = criteriaBuilder.createCriteriaDelete(Example.class);
+        criteriaDelete.from(Example.class);
+        //The equivalent JPQL: DELETE FROM Employee e
+        entityManager.getTransaction().begin();
+        int rowsDeleted = entityManager.createQuery(criteriaDelete).executeUpdate();
+        System.out.println("entities deleted: " + rowsDeleted);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    @Test
+    public void dataBaseConnectionTestDeleteWithWhere() {
+
+        DatabaseConnectionInfo connectionInfo = DatabaseConnectionInfo
+                .builder()
+                .username("root")
+                .databaseType(DatabaseType.MYSQL)
+                .url("jdbc:mysql://localhost/test_automation")
+                .password("my-secret-pw")
+                .entityNames(Stream.of(
+                        Example.class)
+                        .map(Class::getName)
+                        .collect(Collectors.toList()))
+                .build();
+
+
+        Actor julian = Actor.named("julian");
+        julian.can(InteractWithDb.using(connectionInfo));
+
+        EntityManager entityManager = InteractWithDb.as(julian).getManager();
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaDelete<Example> criteriaDelete = criteriaBuilder.createCriteriaDelete(Example.class);
+
+        Root<Example> root = criteriaDelete.from(Example.class);
+        criteriaDelete.where(criteriaBuilder.equal(root.get("name"), "Lunita"));
+        //The equivalent JPQL: DELETE FROM Employee e WHERE e.name = 'Mike'
+        entityManager.getTransaction().begin();
+        int rowsDeleted = entityManager.createQuery(criteriaDelete).executeUpdate();
+        System.out.println("entities deleted: " + rowsDeleted);
+        entityManager.getTransaction().commit();
+        entityManager.close();
     }
 
 }
