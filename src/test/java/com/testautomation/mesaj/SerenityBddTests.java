@@ -27,6 +27,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -208,17 +209,12 @@ public class SerenityBddTests {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
-        CriteriaQuery<Example> criteriaQuery = criteriaBuilder
-                .createQuery(Example.class);
-
-        Root<Example> userRoot = criteriaQuery.from(Example.class);
-
-        Example queryResult = entityManager
-                .createQuery(criteriaQuery
-                        .select(userRoot))
-                .getSingleResult();
-
-        System.out.println(queryResult);
+        CriteriaQuery<Example> criteriaQuery = criteriaBuilder.createQuery(Example.class);
+        criteriaQuery.from(Example.class);
+        List<Example> resultList = entityManager.createQuery(criteriaQuery).getResultList();
+        System.out.println("Register count: " + resultList.size());
+        resultList.forEach(System.out::println);
+        entityManager.close();
     }
 
     @Test
