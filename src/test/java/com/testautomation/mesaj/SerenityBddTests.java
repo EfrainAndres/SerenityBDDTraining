@@ -5,6 +5,7 @@ import com.testautomation.mesaj.builders.FooBuilder;
 import com.testautomation.mesaj.database.DatabaseConnectionInfo;
 import com.testautomation.mesaj.database.DatabaseType;
 import com.testautomation.mesaj.database.entity.Example;
+import com.testautomation.mesaj.database.entity.ExampleOracle;
 import com.testautomation.mesaj.facts.NetflixPlans;
 import com.testautomation.mesaj.models.users.Datum;
 import com.testautomation.mesaj.models.users.Foo;
@@ -23,10 +24,13 @@ import com.testautomation.mesaj.tasks.UpdateUser;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -280,6 +284,63 @@ public class SerenityBddTests {
         int rowsDeleted = entityManager.createQuery(criteriaDelete).executeUpdate();
         System.out.println("entities deleted: " + rowsDeleted);
         entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    @Test
+    public void dataBaseConnectionTestOracle() {
+
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:oracle:thin:@10.133.6.10:1528/WSRRQA", "Consulta", "M06a*Th17$pcqe")) {
+
+            if (conn != null) {
+                System.out.println("Connected to the database!");
+            } else {
+                System.out.println("Failed to make connection!");
+            }
+
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void dataBaseConnectionTestOracle2() {
+
+        DatabaseConnectionInfo connectionInfo = DatabaseConnectionInfo
+                .builder()
+                .username("Consulta")
+                .databaseType(DatabaseType.ORACLE)
+                .url("jdbc:oracle:thin:@10.133.6.10:1528/WSRRQA")
+                .password("M06a*Th17$pcqe")
+                .entityNames(Stream.of(
+                        ExampleOracle.class)
+                        .map(Class::getName)
+                        .collect(Collectors.toList()))
+                .build();
+
+
+        Actor julian = Actor.named("julian");
+        julian.can(InteractWithDb.using(connectionInfo));
+
+        EntityManager entityManager = InteractWithDb.as(julian).getManager();
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<ExampleOracle> criteriaQuery = criteriaBuilder.createQuery(ExampleOracle.class);
+        Root<ExampleOracle> postRoot = criteriaQuery.from(ExampleOracle.class);
+
+        Path<Date> dateEntryPath = postRoot.get("MESSAGE_DATE");
+
+        criteriaQuery.select(postRoot).where(
+                criteriaBuilder.equal(postRoot.get("REF1"), "500097"));
+        TypedQuery<ExampleOracle> qry = entityManager.createQuery(criteriaQuery);
+
+        List<ExampleOracle> resultList = qry.getResultList();
+        System.out.println("Register count: " + resultList.size());
+        resultList.forEach(System.out::println);
         entityManager.close();
     }
 
