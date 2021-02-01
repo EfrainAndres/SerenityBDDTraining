@@ -33,6 +33,14 @@ public class registerUserStepDefiniton {
         efrain.attemptsTo(
                 RegisterUser.withInfo(registerUserInfo)
         );*/
+
+        efrain.attemptsTo(
+                RegisterUser
+                        .withName("morpheus")
+                        .andEmail("eve.holt@reqres.in")
+                        .andPassword("pistol")
+                        .andJob("leader")
+        );
     }
 
     @Then("el debe obtener una cuenta virtual para poder ingresar cuando lo requiera")
